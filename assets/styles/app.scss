@@ -1,7 +1,26 @@
 @import '../../vendor/twbs/bootstrap/scss/bootstrap';
 
-$primary: #8302ab;
+$primarycolor: #3CD3B3;
+$secondarycolor: #005840;
+$tertiarycolor: #0E0E0E;
+
 
 body {
     background-color: skyblue;
+}
+
+.bplogo img {
+    max-width: 1.5rem;
+    max-height: 1.5rem;
+}
+
+.container-fluid {
+    margin-inline: 20rem;
+    gap: 2rem;
+    
+}
+
+
+nav a {
+    color: $primarycolor !important;
 }
