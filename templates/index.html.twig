@@ -1,7 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Binge Prime{% endblock %}
+{% block title %}All programs{% endblock %}
 
 {% block body %}
-<h1>{{ website }}</h1>
+
+<h1> Bienvenu sur Binge Prime !</h1>
+    <a href="{{ path('app_index') }}">
+        Retour à l'accueil
+    </a>
 {% endblock %}
