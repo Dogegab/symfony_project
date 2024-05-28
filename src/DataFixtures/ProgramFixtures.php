@@ -7,54 +7,33 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
+use Faker\Factory;
+
 class ProgramFixtures extends Fixture implements DependentFixtureInterface
 {
-    const PROGRAMS = [
-        [
-            'title' => 'Walking Dead',
-            'synopsis' => 'Des zombies envahissent la terre.',
-            'category' => 'category_Action',
-            'reference' => 'Walking_Dead'
-        ],
-        [
-            'title' => 'The Expanse',
-            'synopsis' => 'some texte',
-            'category' => 'category_Action',
-            'reference' => 'The_expanse'
-        ],
-        [
-            'title' => 'Titre 3',
-            'synopsis' => 'some texte',
-            'category' => 'category_Action',
-            'reference' => 'placeholder'
-        ],
-
-     ];
-
-
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
+        $faker = Factory::create();
 
-        foreach ($this::PROGRAMS as $programData){
+        // L'objectif est de créer 10 séries qui appartiendront à une catégorie au hasard
+        for($i = 1; $i <= 10; $i++) {
             $program = new Program();
-            $program->setTitle($programData['title']);
-            $program->setSynopsis($programData['synopsis']);
-            $program->setPoster('');
-            $category = $this->getReference($programData['category']);
+            $program->setTitle($faker->words(3, true));
+            $program->setSynopsis($faker->paragraphs(2, true));
+            $category = $this->getReference('category_'. $faker->numberBetween(1, 5));
             $program->setCategory($category);
+
             $manager->persist($program);
-            $this->addReference($programData['reference'], $program);
+            $this->addReference('program_' . $i, $program);
         }
+
         $manager->flush();
     }
 
     public function getDependencies()
     {
-        // Tu retournes ici toutes les classes de fixtures dont ProgramFixtures dépend
         return [
-          CategoryFixtures::class,
+            CategoryFixtures::class,
         ];
     }
-
-
 }

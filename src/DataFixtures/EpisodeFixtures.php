@@ -6,46 +6,29 @@ use App\Entity\Episode;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Faker\Factory;
 
 class EpisodeFixtures extends Fixture implements DependentFixtureInterface
 {
-    public const EPISODE = [
-        
-        [
-            'title' => 'Days Gone Bye',
-            'number' => 1,
-            'synopsis' => "Le shérif adjoint Rick Grimes se réveille d'un coma et cherche sa famille dans un monde ravagé par les morts-vivants.",
-            'season' => 1,
-            'reference' => 'Walking_Dead',
-        ],
-        
-        [
-            'title' => 'Guts',
-            'number' => 2,
-            'synopsis' => "In Atlanta, Rick is rescued by a group of survivors, but they soon find themselves trapped inside a department store surrounded by walkers.",
-            'season' => 1,
-            'reference' => 'Walking_Dead',
-        ],
-
-    ];
 
     public function load(ObjectManager $manager)
     {
-        foreach (self::EPISODE as $episodeData) {
-            $episode = new Episode();
-            $episode->setTitle($episodeData['title']);
-            $episode->setNumber($episodeData['number']);
-            $episode->setSynopsis($episodeData['synopsis']);
-            
-            $seasonReference = $episodeData['reference'] . '_season' . $episodeData['season'];
-            $season = $this->getReference($seasonReference);
-            $episode->setSeason($season);
-            $manager->persist($episode);
-
-            $this->addReference($episodeData['reference'] . '_season_' . $episodeData['season'] . '_episode_' . $episodeData['number'], $episode);
+            $faker = Factory::create();
+    
+    for ($k = 1; $k <=10; $k++){     
+        for ($j = 1; $j <=5; $j++){
+            for($i = 1; $i <= 10; $i++) {
+                $episode = new Episode;
+                $episode->setTitle($faker->words(3, true));
+                $episode->setNumber($faker->numberBetween(1, 10));
+                $episode->setSynopsis($faker->paragraph(2));
+                $season = $this->getReference('program_'.$k.'season_'.$j);
+                $episode->setSeason($season);
+                $manager->persist($episode);
+                $this->addReference('program_'.$k.'season_'.$j.'episode_' . $i, $episode);
+            }
         }
-
-        // Exécute la persistance en base de données
+    }
         $manager->flush();
     }
 
